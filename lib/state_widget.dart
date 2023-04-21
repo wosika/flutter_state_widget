@@ -135,6 +135,10 @@ extension StateWidgetExt on Widget {
     Widget? loadingWidget,
     Widget? errorWidget,
     Widget? emptyWidget,
+    //重试
+    VoidCallback? onRetry,
+    //提示信息
+    String? message,
   }) {
     return StateWidget(
       key: key,
@@ -142,6 +146,8 @@ extension StateWidgetExt on Widget {
       loadingWidget: loadingWidget,
       errorWidget: errorWidget,
       emptyWidget: emptyWidget,
+      onRetry: onRetry,
+      message: message,
       child: this,
     );
   }

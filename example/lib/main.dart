@@ -52,6 +52,12 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Text('Hello World'),
         ).state(
           stateType: stateType,
+          onRetry: () {
+            setState(() {
+              stateType = StateType.loading;
+            });
+          },
+          message: '？？？？',
         ),
         floatingActionButton: Column(
           mainAxisAlignment: MainAxisAlignment.end,
