@@ -1,13 +1,14 @@
 library state_widget;
 
 import 'package:flutter/widgets.dart';
-
+import 'package:state_widget/src/empty_state_widget.dart';
+import 'package:state_widget/src/error_state_widget.dart';
+import 'package:state_widget/src/loading_state_widget.dart';
 
 /// 状态布局
-typedef ErrorWidgetBuilder = Widget? Function();
-typedef SuccessWidgetBuilder = Widget? Function();
-typedef EmptyWidgetBuilder = Widget? Function();
-typedef LoadingWidgetBuilder = Widget? Function();
+typedef StateWidgetBuilder = Widget? Function(
+    {VoidCallback? onRetry, String? message});
+
 enum StateType {
   ///错误
   error,
@@ -24,15 +25,14 @@ enum StateType {
 
 class StateWidget extends StatefulWidget {
   //全局配置
-  static ErrorWidgetBuilder? staticErrorWidgetBuilder;
-  static EmptyWidgetBuilder? stateEmptyWidgetBuilder;
-  static LoadingWidgetBuilder? stateLoadingWidgetBuilder;
+  static StateWidgetBuilder? staticErrorWidgetBuilder;
+  static StateWidgetBuilder? stateEmptyWidgetBuilder;
+  static StateWidgetBuilder? stateLoadingWidgetBuilder;
 
   //提供全局初始化配置
-  static void config(
-      {ErrorWidgetBuilder? errorWidgetBuilder,
-        EmptyWidgetBuilder? emptyWidgetBuilder,
-        LoadingWidgetBuilder? loadingWidgetBuilder}) {
+  static void config({StateWidgetBuilder? errorWidgetBuilder,
+    StateWidgetBuilder? emptyWidgetBuilder,
+    StateWidgetBuilder? loadingWidgetBuilder}) {
     staticErrorWidgetBuilder = errorWidgetBuilder;
     stateEmptyWidgetBuilder = emptyWidgetBuilder;
     stateLoadingWidgetBuilder = loadingWidgetBuilder;
@@ -47,13 +47,20 @@ class StateWidget extends StatefulWidget {
   final Widget? emptyWidget;
   final Widget? loadingWidget;
 
-  const StateWidget(
-      {Key? key,
-        required this.type,
-        this.errorWidget,
-        this.successWidget,
-        this.emptyWidget,
-        this.loadingWidget})
+  //错误回调
+  final VoidCallback? onRetry;
+
+  //提示信息
+  final String? message;
+
+  const StateWidget({Key? key,
+    required this.type,
+    this.errorWidget,
+    this.successWidget,
+    this.emptyWidget,
+    this.loadingWidget,
+    this.onRetry,
+    this.message})
       : super(key: key);
 
   @override
@@ -63,43 +70,61 @@ class StateWidget extends StatefulWidget {
 class StateWidgetState extends State<StateWidget> {
   @override
   Widget build(BuildContext context) {
-    return SizedBox(width: double.infinity, child: _buildWidget(widget.type));
+    return SizedBox(
+        width: double.infinity,
+        child: _buildWidget(widget.type));
   }
 
-  Widget _buildDefaultWidget(StateType type) {
+  Widget _buildDefaultWidget(StateType type,
+      {String? message, VoidCallback? onRetry}) {
     switch (type) {
       case StateType.error:
-        break;
+        return _buildDefaultErrorWidget(onRetry: onRetry, message: message);
       case StateType.empty:
-        break;
+        return _buildDefaultEmptyWidget(message: message);
       case StateType.loading:
-        break;
+        return _buildDefaultLoadingWidget(message: message);
       case StateType.success:
-        break;
+        return Container();
     }
-    return Container();
   }
 
-  _buildWidget(StateType type) {
+  Widget _buildWidget(StateType type) {
     switch (type) {
       case StateType.error:
         return widget.errorWidget ??
-            StateWidget.staticErrorWidgetBuilder?.call() ??
-            _buildDefaultWidget(type);
+            StateWidget.staticErrorWidgetBuilder
+                ?.call(onRetry: widget.onRetry, message: widget.message) ??
+            _buildDefaultWidget(type,
+                onRetry: widget.onRetry, message: widget.message);
       case StateType.empty:
         return widget.emptyWidget ??
-            StateWidget.stateEmptyWidgetBuilder?.call() ??
-            _buildDefaultWidget(type);
+            StateWidget.stateEmptyWidgetBuilder
+                ?.call(message: widget.message) ??
+            _buildDefaultWidget(type, message: widget.message);
       case StateType.loading:
         return widget.loadingWidget ??
-            StateWidget.stateLoadingWidgetBuilder?.call() ??
+            StateWidget.stateLoadingWidgetBuilder
+                ?.call(message: widget.message) ??
             _buildDefaultWidget(type);
       case StateType.success:
         return widget.successWidget ?? _buildDefaultWidget(type);
     }
   }
-}
 
+  //构建默认的错误布局
+  Widget _buildDefaultErrorWidget({VoidCallback? onRetry, String? message}) {
+    return ErrorStateWidget(onRetry: onRetry, message: message);
+  }
+
+  Widget _buildDefaultEmptyWidget({String? message}) {
+    return EmptyStateWidget(message: message);
+  }
+
+  Widget _buildDefaultLoadingWidget({String? message}) {
+    return LoadingStateWidget(message: message);
+  }
+}
 
 extension StateWidgetExt on Widget {
   ///页面加载中
