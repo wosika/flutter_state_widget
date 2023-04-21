@@ -8,9 +8,21 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    //全局初始化状态布局
+    StateWidget.config(
+        errorWidgetBuilder: (VoidCallback? onRetry, String? message) => Column(
+              children: [
+                Text(message ?? "Error"),
+                TextButton(onPressed: onRetry, child: const Text("点击重试"))
+              ],
+            ),
+        emptyWidgetBuilder: (VoidCallback? onRetry, String? message) =>
+            Text(message ?? "Empty"),
+        loadingWidgetBuilder: (VoidCallback? onRetry, String? message) =>
+            Text(message ?? "Loading"));
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -50,15 +62,11 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         body: const Center(
           child: Text('Hello World'),
-        ).state(
-          stateType: stateType,
-          onRetry: () {
-            setState(() {
-              stateType = StateType.loading;
-            });
-          },
-          message: '？？？？',
-        ),
+        ).state(stateType: stateType,onRetry: (){
+          setState(() {
+            stateType = StateType.loading;
+          });
+        }),
         floatingActionButton: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
@@ -71,7 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
               tooltip: 'Success',
               child: const Icon(Icons.check),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             FloatingActionButton(
               onPressed: () {
                 setState(() {
@@ -81,7 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
               tooltip: 'Error',
               child: const Icon(Icons.error),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             FloatingActionButton(
               onPressed: () {
                 setState(() {
@@ -91,16 +99,15 @@ class _MyHomePageState extends State<MyHomePage> {
               tooltip: 'Loading',
               child: const Icon(Icons.hourglass_full),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             FloatingActionButton(
-              onPressed: () {
-                setState(() {
-                  stateType = StateType.empty;
-                });
-              },
-              tooltip: 'empty',
-              child: const Icon(Icons.hourglass_empty)
-            ),
+                onPressed: () {
+                  setState(() {
+                    stateType = StateType.empty;
+                  });
+                },
+                tooltip: 'empty',
+                child: const Icon(Icons.hourglass_empty)),
           ],
         ));
   }

@@ -6,8 +6,7 @@ import 'package:state_widget/src/error_state_widget.dart';
 import 'package:state_widget/src/loading_state_widget.dart';
 
 /// 状态布局
-typedef StateWidgetBuilder = Widget? Function(
-    {VoidCallback? onRetry, String? message});
+typedef StateWidgetBuilder = Widget? Function(VoidCallback? onRetry, String? message);
 
 enum StateType {
   ///错误
@@ -95,18 +94,18 @@ class StateWidgetState extends State<StateWidget> {
       case StateType.error:
         return widget.errorWidget ??
             StateWidget.staticErrorWidgetBuilder
-                ?.call(onRetry: widget.onRetry, message: widget.message) ??
+                ?.call(widget.onRetry, widget.message) ??
             _buildDefaultWidget(type,
                 onRetry: widget.onRetry, message: widget.message);
       case StateType.empty:
         return widget.emptyWidget ??
             StateWidget.stateEmptyWidgetBuilder
-                ?.call(message: widget.message) ??
+                ?.call(widget.onRetry, widget.message) ??
             _buildDefaultWidget(type, message: widget.message);
       case StateType.loading:
         return widget.loadingWidget ??
             StateWidget.stateLoadingWidgetBuilder
-                ?.call(message: widget.message) ??
+                ?.call(widget.onRetry, widget.message) ??
             _buildDefaultWidget(type);
       case StateType.success:
         return widget.child;

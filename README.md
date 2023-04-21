@@ -1,39 +1,67 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+好的，下面是针对这个组件的简要文档，包括组件的使用方法和参数说明。
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
+# StateWidget 组件
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
+`StateWidget` 组件是一个通用的状态布局组件，可以根据不同的状态（例如加载中、加载失败、空数据等）来显示不同的布局。
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+## 使用方法
 
-## Features
+使用 `StateWidget` 组件需要传入以下参数：
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+- `stateType`: 状态布局的类型，枚举类型为 `StateType`，包括以下几种值：
+    - `loading`: 加载中状态
+    - `empty`: 空数据状态
+    - `error`: 加载失败状态
+    - `success`: 内容展示状态
+- `message`: 当状态布局的类型为 `empty` 或 `error` 时，可以传入一段文本说明具体的状态信息。
+- `onRetry`: 当状态布局的类型为 `error` 时，可以传入一个回调函数，用于重新尝试加载数据。
+- `child`: 当状态布局的类型为 `success` 时，需要传入一个子组件用于展示内容。
 
-## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
-
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+示例代码如下：
 
 ```dart
-const like = 'sample';
+Center(child: Text('Hello World')).state(stateType: stateType,onRetry: (){
+  setState(() {
+    stateType = StateType.loading;
+  });
+})
+
+//或者
+
+StateWidget(
+  stateType: stateType,
+  message: '加载失败',
+  onRetry: (){
+    setState(() {
+      stateType = StateType.loading;
+    });
+  },
+  child: Center(child: Text('Hello World')),
+)
 ```
 
-## Additional information
+## 全局配置
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+可以通过以下方式来配置 `StateWidget` 组件的全局配置信息：
+
+```dart
+    StateWidget.config(
+errorWidgetBuilder: (VoidCallback? onRetry, String? message) => Column(
+children: [
+Text(message ?? "Error"),
+TextButton(onPressed: onRetry, child: const Text("点击重试"))
+],
+),
+emptyWidgetBuilder: (VoidCallback? onRetry, String? message) =>
+Text(message ?? "Empty"),
+loadingWidgetBuilder: (VoidCallback? onRetry, String? message) =>
+Text(message ?? "Loading"));
+
+```
+
+其中 `StateWidgetConfig` 是一个配置类，包含以下参数：
+
+- `emptyWidgetBuilder`: 构建空数据状态下的自定义组件。
+- `errorWidgetBuilder`: 构建加载失败状态下的自定义组件。
+- `loadingWidgetBuilder`: 构建加载中状态下的自定义组件。
+
