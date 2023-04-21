@@ -21,39 +21,38 @@
 //1.直接使用
     StateWidget(
       stateType: stateType,
-      loadingWidget: const Text('Loading'),
-      emptyWidget: const Text('Empty'),
-      errorWidget: TextButton(
-        onPressed: () {
+      loadingWidgetBuilder: (_, __) => const Text('Loading'),
+      emptyWidgetBuilder: (message, __) => const Text('Empty'),
+      errorWidgetBuilder: (message, onRetry) => TextButton(
+        onPressed: onRetry,
+        child: const Text("点击重试"),
+      ),
+      onRetry: () {
+        //retry
+        setState(() {
+          stateType = StateType.loading;
+        });
+      },
+      message: "提示信息",
+      child: const Text('Hello World'),
+    );
+
+//2.使用拓展函数.state来构建
+     Text('Hello World').state(
+        stateType: stateType,
+        loadingWidgetBuilder: (_, __) => const Text('Loading'),
+        emptyWidgetBuilder: (message, __) => const Text('Empty'),
+        errorWidgetBuilder: (message, onRetry) => TextButton(
+              onPressed: onRetry,
+              child: const Text("点击重试"),
+            ),
+        onRetry: () {
           //retry
           setState(() {
             stateType = StateType.loading;
           });
         },
-        child: const Text("点击重试"),
-      ),
-      child: const Text('Hello World'),
-    );
-
-//2.使用拓展函数.state来构建
-   Center(child: Text('Hello World')).state(
-          stateType: stateType,
-          errorWidget: Column(
-            children: [
-              Text("Error"),
-              TextButton(
-                  onPressed: () {
-                    //retry
-                    setState(() {
-                      stateType = StateType.loading;
-                    });
-                  },
-                  child: const Text("点击重试"))
-            ],
-          ),
-          emptyWidget: Text("Empty"),
-          loadingWidget: Text("Loading")
-    );
+        message: "提示信息");
 
 ```
 
@@ -62,15 +61,18 @@
 可以通过以下方式来配置 `StateWidget` 组件的全局配置信息：
 
 ```dart
-StateWidget.config(
-  errorWidgetBuilder: (VoidCallback? onRetry, String? message) => 
-    Column(children: [
-      Text(message ?? "Error"),
-      TextButton(onPressed:onRetry, child: const Text("点击重试"))
-    ]),
-  emptyWidgetBuilder: (VoidCallback? onRetry, String? message) =>Text(message ?? "Empty"),
-  loadingWidgetBuilder: (VoidCallback? onRetry, String? message) =>Text(message ?? "Loading")
-  );
+    //全局初始化状态布局
+    StateWidget.config(
+        errorWidgetBuilder: (String? message, VoidCallback? onRetry) => Column(
+              children: [
+                Text(message ?? "Error"),
+                TextButton(onPressed: onRetry, child: const Text("点击重试"))
+              ],
+            ),
+        emptyWidgetBuilder: (String? message, VoidCallback? onRetry) =>
+            Text(message ?? "Empty"),
+        loadingWidgetBuilder: (String? message, VoidCallback? onRetry) =>
+            Text(message ?? "Loading"));
 
 ```
 

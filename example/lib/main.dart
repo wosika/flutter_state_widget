@@ -12,15 +12,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     //全局初始化状态布局
     StateWidget.config(
-        errorWidgetBuilder: (VoidCallback? onRetry, String? message) => Column(
+        errorWidgetBuilder: (String? message, VoidCallback? onRetry) => Column(
               children: [
                 Text(message ?? "Error"),
                 TextButton(onPressed: onRetry, child: const Text("点击重试"))
               ],
             ),
-        emptyWidgetBuilder: (VoidCallback? onRetry, String? message) =>
+        emptyWidgetBuilder: (String? message, VoidCallback? onRetry) =>
             Text(message ?? "Empty"),
-        loadingWidgetBuilder: (VoidCallback? onRetry, String? message) =>
+        loadingWidgetBuilder: (String? message, VoidCallback? onRetry) =>
             Text(message ?? "Loading"));
 
     return MaterialApp(
@@ -107,21 +107,38 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   _buildBody() {
-    return
-      StateWidget(
-      stateType: stateType,
-      loadingWidget: const Text('Loading'),
-      emptyWidget: const Text('Empty'),
-      errorWidget: TextButton(
-        onPressed: () {
+    return Text('Hello World').state(
+        stateType: stateType,
+        loadingWidgetBuilder: (_, __) => const Text('Loading'),
+        emptyWidgetBuilder: (message, __) => const Text('Empty'),
+        errorWidgetBuilder: (message, onRetry) => TextButton(
+              onPressed: onRetry,
+              child: const Text("点击重试"),
+            ),
+        onRetry: () {
           //retry
           setState(() {
             stateType = StateType.loading;
           });
         },
-        child: const Text("点击重试"),
-      ),
-      child: const Text('Hello World'),
-    );
+        message: "提示信息");
+
+    // StateWidget(
+    //   stateType: stateType,
+    //   loadingWidgetBuilder: (_, __) => const Text('Loading'),
+    //   emptyWidgetBuilder: (message, __) => const Text('Empty'),
+    //   errorWidgetBuilder: (message, onRetry) => TextButton(
+    //     onPressed: onRetry,
+    //     child: const Text("点击重试"),
+    //   ),
+    //   onRetry: () {
+    //     //retry
+    //     setState(() {
+    //       stateType = StateType.loading;
+    //     });
+    //   },
+    //   message: "提示信息",
+    //   child: const Text('Hello World'),
+    // );
   }
 }
