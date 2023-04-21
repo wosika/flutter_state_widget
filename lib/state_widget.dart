@@ -30,20 +30,21 @@ class StateWidget extends StatefulWidget {
   static StateWidgetBuilder? stateLoadingWidgetBuilder;
 
   //提供全局初始化配置
-  static void config({StateWidgetBuilder? errorWidgetBuilder,
-    StateWidgetBuilder? emptyWidgetBuilder,
-    StateWidgetBuilder? loadingWidgetBuilder}) {
+  static void config(
+      {StateWidgetBuilder? errorWidgetBuilder,
+      StateWidgetBuilder? emptyWidgetBuilder,
+      StateWidgetBuilder? loadingWidgetBuilder}) {
     staticErrorWidgetBuilder = errorWidgetBuilder;
     stateEmptyWidgetBuilder = emptyWidgetBuilder;
     stateLoadingWidgetBuilder = loadingWidgetBuilder;
   }
 
   //状态
-  final StateType type;
+  final StateType stateType;
 
   //局部配置
   final Widget? errorWidget;
-  final Widget? successWidget;
+  final Widget child;
   final Widget? emptyWidget;
   final Widget? loadingWidget;
 
@@ -53,14 +54,15 @@ class StateWidget extends StatefulWidget {
   //提示信息
   final String? message;
 
-  const StateWidget({Key? key,
-    required this.type,
-    this.errorWidget,
-    this.successWidget,
-    this.emptyWidget,
-    this.loadingWidget,
-    this.onRetry,
-    this.message})
+  const StateWidget(
+      {Key? key,
+      required this.child,
+      required this.stateType,
+      this.errorWidget,
+      this.emptyWidget,
+      this.loadingWidget,
+      this.onRetry,
+      this.message})
       : super(key: key);
 
   @override
@@ -71,8 +73,7 @@ class StateWidgetState extends State<StateWidget> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        width: double.infinity,
-        child: _buildWidget(widget.type));
+        width: double.infinity, child: _buildWidget(widget.stateType));
   }
 
   Widget _buildDefaultWidget(StateType type,
@@ -108,7 +109,7 @@ class StateWidgetState extends State<StateWidget> {
                 ?.call(message: widget.message) ??
             _buildDefaultWidget(type);
       case StateType.success:
-        return widget.successWidget ?? _buildDefaultWidget(type);
+        return widget.child;
     }
   }
 
@@ -130,18 +131,18 @@ extension StateWidgetExt on Widget {
   ///页面加载中
   Widget state({
     Key? key,
-    StateType type = StateType.loading,
+    StateType stateType = StateType.loading,
     Widget? loadingWidget,
     Widget? errorWidget,
     Widget? emptyWidget,
   }) {
     return StateWidget(
       key: key,
-      type: type,
+      stateType: stateType,
       loadingWidget: loadingWidget,
       errorWidget: errorWidget,
       emptyWidget: emptyWidget,
-      successWidget: this,
+      child: this,
     );
   }
 }

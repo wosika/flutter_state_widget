@@ -8,6 +8,8 @@ class EmptyStateWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+      Text(message ?? "Empty"),
+    ]);
   }
 }

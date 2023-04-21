@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 class ErrorStateWidget extends StatelessWidget {
   const ErrorStateWidget({Key? key, this.onRetry, this.message})
@@ -8,6 +8,14 @@ class ErrorStateWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+      Text(message ?? "Error"),
+      const SizedBox(height: 20),
+      TextButton.icon(
+        style: TextButton.styleFrom(),
+          onPressed: onRetry,
+          icon: const Icon(Icons.refresh),
+          label: const Text("Retry"))
+    ]);
   }
 }
