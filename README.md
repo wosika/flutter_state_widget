@@ -1,5 +1,3 @@
-好的，下面是针对这个组件的简要文档，包括组件的使用方法和参数说明。
-
 # StateWidget 组件
 
 `StateWidget` 组件是一个通用的状态布局组件，可以根据不同的状态（例如加载中、加载失败、空数据等）来显示不同的布局。
@@ -20,14 +18,7 @@
 示例代码如下：
 
 ```dart
-Center(child: Text('Hello World')).state(stateType: stateType,onRetry: (){
-  setState(() {
-    stateType = StateType.loading;
-  });
-})
-
-//或者
-
+//1.直接使用
 StateWidget(
   stateType: stateType,
   message: '加载失败',
@@ -38,6 +29,14 @@ StateWidget(
   },
   child: Center(child: Text('Hello World')),
 )
+
+//2.使用拓展函数.state来构建
+Center(child: Text('Hello World')).state(stateType: stateType,onRetry: (){
+  setState(() {
+    stateType = StateType.loading;
+  });
+})
+
 ```
 
 ## 全局配置
@@ -45,17 +44,15 @@ StateWidget(
 可以通过以下方式来配置 `StateWidget` 组件的全局配置信息：
 
 ```dart
-    StateWidget.config(
-errorWidgetBuilder: (VoidCallback? onRetry, String? message) => Column(
-children: [
-Text(message ?? "Error"),
-TextButton(onPressed: onRetry, child: const Text("点击重试"))
-],
-),
-emptyWidgetBuilder: (VoidCallback? onRetry, String? message) =>
-Text(message ?? "Empty"),
-loadingWidgetBuilder: (VoidCallback? onRetry, String? message) =>
-Text(message ?? "Loading"));
+StateWidget.config(
+  errorWidgetBuilder: (VoidCallback? onRetry, String? message) => 
+    Column(children: [
+      Text(message ?? "Error"),
+      TextButton(onPressed:onRetry, child: const Text("点击重试"))
+    ]),
+  emptyWidgetBuilder: (VoidCallback? onRetry, String? message) =>Text(message ?? "Empty"),
+  loadingWidgetBuilder: (VoidCallback? onRetry, String? message) =>Text(message ?? "Loading")
+  );
 
 ```
 
