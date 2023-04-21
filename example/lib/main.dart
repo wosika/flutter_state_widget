@@ -60,13 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
         appBar: AppBar(
           title: Text(widget.title),
         ),
-        body: const Center(
-          child: Text('Hello World'),
-        ).state(stateType: stateType,onRetry: (){
-          setState(() {
-            stateType = StateType.loading;
-          });
-        }),
+        body: _buildBody(),
         floatingActionButton: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
@@ -110,5 +104,24 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: const Icon(Icons.hourglass_empty)),
           ],
         ));
+  }
+
+  _buildBody() {
+    return
+      StateWidget(
+      stateType: stateType,
+      loadingWidget: const Text('Loading'),
+      emptyWidget: const Text('Empty'),
+      errorWidget: TextButton(
+        onPressed: () {
+          //retry
+          setState(() {
+            stateType = StateType.loading;
+          });
+        },
+        child: const Text("点击重试"),
+      ),
+      child: const Text('Hello World'),
+    );
   }
 }

@@ -19,23 +19,41 @@
 
 ```dart
 //1.直接使用
-StateWidget(
-  stateType: stateType,
-  message: '加载失败',
-  onRetry: (){
-    setState(() {
-      stateType = StateType.loading;
-    });
-  },
-  child: Center(child: Text('Hello World')),
-)
+    StateWidget(
+      stateType: stateType,
+      loadingWidget: const Text('Loading'),
+      emptyWidget: const Text('Empty'),
+      errorWidget: TextButton(
+        onPressed: () {
+          //retry
+          setState(() {
+            stateType = StateType.loading;
+          });
+        },
+        child: const Text("点击重试"),
+      ),
+      child: const Text('Hello World'),
+    );
 
 //2.使用拓展函数.state来构建
-Center(child: Text('Hello World')).state(stateType: stateType,onRetry: (){
-  setState(() {
-    stateType = StateType.loading;
-  });
-})
+   Center(child: Text('Hello World')).state(
+          stateType: stateType,
+          errorWidget: Column(
+            children: [
+              Text("Error"),
+              TextButton(
+                  onPressed: () {
+                    //retry
+                    setState(() {
+                      stateType = StateType.loading;
+                    });
+                  },
+                  child: const Text("点击重试"))
+            ],
+          ),
+          emptyWidget: Text("Empty"),
+          loadingWidget: Text("Loading")
+    );
 
 ```
 
