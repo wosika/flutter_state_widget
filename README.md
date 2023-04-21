@@ -62,3 +62,4 @@ StateWidget.config(
 - `errorWidgetBuilder`: 构建加载失败状态下的自定义组件。
 - `loadingWidgetBuilder`: 构建加载中状态下的自定义组件。
 
+### 配置优先级 局部配置 > 全局配置 
