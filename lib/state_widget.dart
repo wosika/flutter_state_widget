@@ -76,8 +76,12 @@ class StateWidget extends StatefulWidget {
 class StateWidgetState extends State<StateWidget> {
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-        width: double.infinity, child: _buildWidget(widget.stateType));
+    //只要不是成功状态并且是sliver，就使用SliverFillRemaining包裹
+    if (widget.isSliver && widget.stateType != StateType.success) {
+      return SliverFillRemaining(child: _buildWidget(widget.stateType));
+    } else {
+      return _buildWidget(widget.stateType);
+    }
   }
 
   Widget _buildDefaultWidget(StateType type,
@@ -123,9 +127,7 @@ class StateWidgetState extends State<StateWidget> {
         return widget.child;
     }
 
-    return widget.isSliver
-        ? SliverFillRemaining(hasScrollBody: false, child: returnWidget)
-        : returnWidget;
+    return returnWidget;
   }
 
   //构建默认的错误布局
