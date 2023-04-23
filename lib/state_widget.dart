@@ -48,6 +48,9 @@ class StateWidget extends StatefulWidget {
   final StateWidgetBuilder? emptyWidgetBuilder;
   final StateWidgetBuilder? loadingWidgetBuilder;
 
+  //是否是sliver
+  final bool isSliver;
+
   //错误回调
   final VoidCallback? onRetry;
 
@@ -58,6 +61,7 @@ class StateWidget extends StatefulWidget {
       {Key? key,
       required this.child,
       required this.stateType,
+      this.isSliver = false,
       this.errorWidgetBuilder,
       this.emptyWidgetBuilder,
       this.loadingWidgetBuilder,
@@ -91,29 +95,37 @@ class StateWidgetState extends State<StateWidget> {
   }
 
   Widget _buildWidget(StateType type) {
+    Widget returnWidget;
     switch (type) {
       case StateType.error:
-        return widget.errorWidgetBuilder
-                ?.call(widget.message, widget.onRetry) ??
-            StateWidget.staticErrorWidgetBuilder
-                ?.call(widget.message, widget.onRetry) ??
-            _buildDefaultWidget(type,
-                onRetry: widget.onRetry, message: widget.message);
+        returnWidget =
+            widget.errorWidgetBuilder?.call(widget.message, widget.onRetry) ??
+                StateWidget.staticErrorWidgetBuilder
+                    ?.call(widget.message, widget.onRetry) ??
+                _buildDefaultWidget(type,
+                    onRetry: widget.onRetry, message: widget.message);
+        break;
       case StateType.empty:
-        return widget.emptyWidgetBuilder
-                ?.call(widget.message, widget.onRetry) ??
-            StateWidget.stateEmptyWidgetBuilder
-                ?.call(widget.message, widget.onRetry) ??
-            _buildDefaultWidget(type, message: widget.message);
+        returnWidget =
+            widget.emptyWidgetBuilder?.call(widget.message, widget.onRetry) ??
+                StateWidget.stateEmptyWidgetBuilder
+                    ?.call(widget.message, widget.onRetry) ??
+                _buildDefaultWidget(type, message: widget.message);
+        break;
       case StateType.loading:
-        return widget.loadingWidgetBuilder
-                ?.call(widget.message, widget.onRetry) ??
-            StateWidget.stateLoadingWidgetBuilder
-                ?.call(widget.message, widget.onRetry) ??
-            _buildDefaultWidget(type);
+        returnWidget =
+            widget.loadingWidgetBuilder?.call(widget.message, widget.onRetry) ??
+                StateWidget.stateLoadingWidgetBuilder
+                    ?.call(widget.message, widget.onRetry) ??
+                _buildDefaultWidget(type);
+        break;
       case StateType.success:
         return widget.child;
     }
+
+    return widget.isSliver
+        ? SliverFillRemaining(hasScrollBody: false, child: returnWidget)
+        : returnWidget;
   }
 
   //构建默认的错误布局
@@ -131,17 +143,19 @@ class StateWidgetState extends State<StateWidget> {
 }
 
 extension StateWidgetExt on Widget {
-  ///页面加载中
+  ///扩展
   Widget state({
     Key? key,
     StateType stateType = StateType.loading,
     StateWidgetBuilder? loadingWidgetBuilder,
     StateWidgetBuilder? errorWidgetBuilder,
     StateWidgetBuilder? emptyWidgetBuilder,
-    //重试
-    VoidCallback? onRetry,
+    //是否是sliver
+    bool isSliver = false,
     //提示信息
     String? message,
+    //重试
+    VoidCallback? onRetry,
   }) {
     return StateWidget(
       key: key,
@@ -151,6 +165,7 @@ extension StateWidgetExt on Widget {
       emptyWidgetBuilder: emptyWidgetBuilder,
       onRetry: onRetry,
       message: message,
+      isSliver: isSliver,
       child: this,
     );
   }
