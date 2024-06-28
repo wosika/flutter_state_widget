@@ -26,8 +26,8 @@ enum StateType {
 class StateWidget extends StatefulWidget {
   //全局配置
   static StateWidgetBuilder? staticErrorWidgetBuilder;
-  static StateWidgetBuilder? stateEmptyWidgetBuilder;
-  static StateWidgetBuilder? stateLoadingWidgetBuilder;
+  static StateWidgetBuilder? staticEmptyWidgetBuilder;
+  static StateWidgetBuilder? staticLoadingWidgetBuilder;
 
   //提供全局初始化配置
   static void config(
@@ -35,8 +35,8 @@ class StateWidget extends StatefulWidget {
       StateWidgetBuilder? emptyWidgetBuilder,
       StateWidgetBuilder? loadingWidgetBuilder}) {
     staticErrorWidgetBuilder = errorWidgetBuilder;
-    stateEmptyWidgetBuilder = emptyWidgetBuilder;
-    stateLoadingWidgetBuilder = loadingWidgetBuilder;
+    staticEmptyWidgetBuilder = emptyWidgetBuilder;
+    staticLoadingWidgetBuilder = loadingWidgetBuilder;
   }
 
   //状态
@@ -112,14 +112,14 @@ class StateWidgetState extends State<StateWidget> {
       case StateType.empty:
         returnWidget =
             widget.emptyWidgetBuilder?.call(widget.message, widget.onRetry) ??
-                StateWidget.stateEmptyWidgetBuilder
+                StateWidget.staticEmptyWidgetBuilder
                     ?.call(widget.message, widget.onRetry) ??
                 _buildDefaultWidget(type, message: widget.message);
         break;
       case StateType.loading:
         returnWidget =
             widget.loadingWidgetBuilder?.call(widget.message, widget.onRetry) ??
-                StateWidget.stateLoadingWidgetBuilder
+                StateWidget.staticLoadingWidgetBuilder
                     ?.call(widget.message, widget.onRetry) ??
                 _buildDefaultWidget(type);
         break;

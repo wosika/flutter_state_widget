@@ -12,7 +12,7 @@ class ErrorStateWidget extends StatelessWidget {
       Text(message ?? "Error"),
       const SizedBox(height: 20),
       TextButton.icon(
-        style: TextButton.styleFrom(),
+        style: TextButton.styleFrom(foregroundColor: Colors.white, backgroundColor: Colors.red),
           onPressed: onRetry,
           icon: const Icon(Icons.refresh),
           label: const Text("Retry"))

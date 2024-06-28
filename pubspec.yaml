@@ -1,10 +1,10 @@
 name: state_widget
-description: 加载中、错误、空布局
-version: 0.0.3
-homepage:
+description: Loading, error, empty widget
+version: 1.0.0
+homepage: https://github.com/wosika/flutter_state_widget
 
 environment:
-  sdk: '>=2.19.3 <3.0.0'
+  sdk: '>=2.14.0 <4.0.0'
   flutter: ">=1.17.0"
 
 dependencies:
