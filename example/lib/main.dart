@@ -71,7 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 });
               },
               tooltip: 'Success',
-              child: const Icon(Icons.check),
+              child: Text("Success"),
             ),
             const SizedBox(height: 10),
             FloatingActionButton(
@@ -81,7 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 });
               },
               tooltip: 'Error',
-              child: const Icon(Icons.error),
+              child: Text("Error"),
             ),
             const SizedBox(height: 10),
             FloatingActionButton(
@@ -91,7 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 });
               },
               tooltip: 'Loading',
-              child: const Icon(Icons.hourglass_full),
+              child: Text("Loading"),
             ),
             const SizedBox(height: 10),
             FloatingActionButton(
@@ -101,27 +101,29 @@ class _MyHomePageState extends State<MyHomePage> {
                   });
                 },
                 tooltip: 'empty',
-                child: const Icon(Icons.hourglass_empty)),
+                child: Text("empty")),
           ],
         ));
   }
 
   _buildBody() {
-    return Text('Hello World').state(
-        stateType: stateType,
-        loadingWidgetBuilder: (_, __) => const Text('Loading'),
-        emptyWidgetBuilder: (message, __) => const Text('Empty'),
-        errorWidgetBuilder: (message, onRetry) => TextButton(
-              onPressed: onRetry,
-              child: const Text("点击重试"),
-            ),
-        onRetry: () {
-          //retry
-          setState(() {
-            stateType = StateType.loading;
-          });
-        },
-        message: "提示信息");
+    return Center(
+      child: Text('Hello World').state(
+          stateType: stateType,
+          loadingWidgetBuilder: (_, __) => const Text('Loading'),
+          emptyWidgetBuilder: (message, __) => const Text('Empty'),
+          errorWidgetBuilder: (message, onRetry) => TextButton(
+                onPressed: onRetry,
+                child: const Text("retry"),
+              ),
+          onRetry: () {
+            //retry
+            setState(() {
+              stateType = StateType.loading;
+            });
+          },
+          message: "提示信息"),
+    );
 
     // StateWidget(
     //   stateType: stateType,
