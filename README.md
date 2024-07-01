@@ -1,85 +1,90 @@
-# StateWidget 组件
+[![pub package](https://img.shields.io/pub/v/stripe_sdk.svg)](https://pub.dev/packages/stripe_sdk)
+# StateWidget
 
-`StateWidget` 组件是一个通用的状态布局组件，可以根据不同的状态（例如加载中、加载失败、空数据等）来显示不同的布局。
+# Chinese Document: [README](./README_CN.md)
 
-## 使用方法
+The `StateWidget` component is a generic state layout component that can display different layouts based on various states (such as loading, load failure, empty data, etc.).
 
-使用 `StateWidget` 组件需要传入以下参数：
+## Usage
 
-- `stateType`: 状态布局的类型，枚举类型为 `StateType`，包括以下几种值：
-    - `loading`: 加载中状态
-    - `empty`: 空数据状态
-    - `error`: 加载失败状态
-    - `success`: 内容展示状态
-- `message`: 当状态布局的类型为 `empty` 或 `error` 时，可以传入一段文本说明具体的状态信息。
-- `onRetry`: 当状态布局的类型为 `error` 时，可以传入一个回调函数，用于重新尝试加载数据。
-- `child`: 当状态布局的类型为 `success` 时，需要传入一个子组件用于展示内容。
+To use the `StateWidget` component, the following parameters need to be provided:
 
-示例代码如下：
+- `stateType`: The type of state layout, enumerated as `StateType`, including the following values:
+- `loading`: Loading state
+- `empty`: Empty data state
+- `error`: Load failure state
+- `success`: Content display state
+- `message`: When the state layout type is `empty` or `error`, a text message can be passed to describe the specific state information.
+- `onRetry`: When the state layout type is `error`, a callback function can be passed to retry loading the data.
+- `child`: When the state layout type is `success`, a child component needs to be passed to display the content.
+
+Example code:
 
 ```dart
-//1.直接使用
-    StateWidget(
-      stateType: stateType,
-      loadingWidgetBuilder: (_, __) => const Text('Loading'),
-      emptyWidgetBuilder: (message, __) => const Text('Empty'),
-      errorWidgetBuilder: (message, onRetry) => TextButton(
-        onPressed: onRetry,
-        child: const Text("点击重试"),
-      ),
-      onRetry: () {
-        //retry
-        setState(() {
-          stateType = StateType.loading;
-        });
-      },
-      message: "提示信息",
-      child: const Text('Hello World'),
-    );
+//1. Direct usage
+StateWidget(
+stateType: stateType,
+loadingWidgetBuilder: (_, __) => const Text('Loading'),
+emptyWidgetBuilder: (message, __) => const Text('Empty'),
+errorWidgetBuilder: (message, onRetry) => TextButton(
+onPressed: onRetry,
+child: const Text("Click to Retry"),
+),
+onRetry: () {
+//retry
+setState(() {
+stateType = StateType.loading;
+});
+},
+message: "Prompt message",
+child: const Text('Hello World'),
+);
 
-//2.使用拓展函数.state来构建
-     Text('Hello World').state(
-        stateType: stateType,
-        loadingWidgetBuilder: (_, __) => const Text('Loading'),
-        emptyWidgetBuilder: (message, __) => const Text('Empty'),
-        errorWidgetBuilder: (message, onRetry) => TextButton(
-              onPressed: onRetry,
-              child: const Text("点击重试"),
-            ),
-        onRetry: () {
-          //retry
-          setState(() {
-            stateType = StateType.loading;
-          });
-        },
-        message: "提示信息");
+//2. Using the extension function .state to build
+Text('Hello World').state(
+stateType: stateType,
+loadingWidgetBuilder: (_, __) => const Text('Loading'),
+emptyWidgetBuilder: (message, __) => const Text('Empty'),
+errorWidgetBuilder: (message, onRetry) => TextButton(
+onPressed: onRetry,
+child: const Text("Click to Retry"),
+),
+onRetry: () {
+//retry
+setState(() {
+stateType = StateType.loading;
+});
+},
+message: "Prompt message");
 
 ```
 
-## 全局配置
+## Global Configuration
 
-可以通过以下方式来配置 `StateWidget` 组件的全局配置信息：
+The global configuration of the `StateWidget` component can be set as follows:
 
 ```dart
-    //全局初始化状态布局
-    StateWidget.config(
-        errorWidgetBuilder: (String? message, VoidCallback? onRetry) => Column(
-              children: [
-                Text(message ?? "Error"),
-                TextButton(onPressed: onRetry, child: const Text("点击重试"))
-              ],
-            ),
-        emptyWidgetBuilder: (String? message, VoidCallback? onRetry) =>
-            Text(message ?? "Empty"),
-        loadingWidgetBuilder: (String? message, VoidCallback? onRetry) =>
-            Text(message ?? "Loading"));
+// Global initialization of state layout
+StateWidget.config(
+errorWidgetBuilder: (String? message, VoidCallback? onRetry) => Column(
+children: [
+Text(message ?? "Error"),
+TextButton(onPressed: onRetry, child: const Text("Click to Retry"))
+],
+),
+emptyWidgetBuilder: (String? message, VoidCallback? onRetry) =>
+Text(message ?? "Empty"),
+loadingWidgetBuilder: (String? message, VoidCallback? onRetry) =>
+Text(message ?? "Loading"));
 
 ```
 
-其中 `StateWidgetConfig` 是一个配置类，包含以下参数：
+The `StateWidgetConfig` is a configuration class that includes the following parameters:
 
-- `emptyWidgetBuilder`: 构建空数据状态下的自定义组件。
-- `errorWidgetBuilder`: 构建加载失败状态下的自定义组件。
-- `loadingWidgetBuilder`: 构建加载中状态下的自定义组件。
+- `emptyWidgetBuilder`: Custom component for building the empty data state.
+- `errorWidgetBuilder`: Custom component for building the load failure state.
+- `loadingWidgetBuilder`: Custom component for building the loading state.
 
-### 配置优先级 局部配置 > 全局配置 
+### Configuration Priority
+
+Local configuration > Global configuration
