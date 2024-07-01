@@ -10,10 +10,10 @@ The `StateWidget` component is a generic state layout component that can display
 To use the `StateWidget` component, the following parameters need to be provided:
 
 - `stateType`: The type of state layout, enumerated as `StateType`, including the following values:
-- `loading`: Loading state
-- `empty`: Empty data state
-- `error`: Load failure state
-- `success`: Content display state
+    - `loading`: Loading state
+    - `empty`: Empty data state
+    - `error`: Load failure state
+    - `success`: Content display state
 - `message`: When the state layout type is `empty` or `error`, a text message can be passed to describe the specific state information.
 - `onRetry`: When the state layout type is `error`, a callback function can be passed to retry loading the data.
 - `child`: When the state layout type is `success`, a child component needs to be passed to display the content.
