@@ -1,4 +1,4 @@
-[![pub package](https://img.shields.io/pub/v/stripe_sdk.svg)](https://pub.dev/packages/stripe_sdk)
+[![pub package](https://img.shields.io/pub/v/state_widget.svg)](https://pub.dev/packages/state_widget)
 # StateWidget
 
 # Chinese Document: [README](./README_CN.md)
