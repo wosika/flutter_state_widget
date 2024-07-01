@@ -22,40 +22,40 @@ Example code:
 
 ```dart
 //1. Direct usage
-StateWidget(
-stateType: stateType,
-loadingWidgetBuilder: (_, __) => const Text('Loading'),
-emptyWidgetBuilder: (message, __) => const Text('Empty'),
-errorWidgetBuilder: (message, onRetry) => TextButton(
-onPressed: onRetry,
-child: const Text("Click to Retry"),
-),
-onRetry: () {
-//retry
-setState(() {
-stateType = StateType.loading;
-});
-},
-message: "Prompt message",
-child: const Text('Hello World'),
-);
+    StateWidget(
+      stateType: stateType,
+      loadingWidgetBuilder: (_, __) => const Text('Loading'),
+      emptyWidgetBuilder: (message, __) => const Text('Empty'),
+      errorWidgetBuilder: (message, onRetry) => TextButton(
+        onPressed: onRetry,
+        child: const Text("Click to Retry"),
+      ),
+      onRetry: () {
+        //retry
+        setState(() {
+          stateType = StateType.loading;
+        });
+      },
+      message: "Prompt message",
+      child: const Text('Hello World'),
+    );
 
 //2. Using the extension function .state to build
-Text('Hello World').state(
-stateType: stateType,
-loadingWidgetBuilder: (_, __) => const Text('Loading'),
-emptyWidgetBuilder: (message, __) => const Text('Empty'),
-errorWidgetBuilder: (message, onRetry) => TextButton(
-onPressed: onRetry,
-child: const Text("Click to Retry"),
-),
-onRetry: () {
-//retry
-setState(() {
-stateType = StateType.loading;
-});
-},
-message: "Prompt message");
+     Text('Hello World').state(
+        stateType: stateType,
+        loadingWidgetBuilder: (_, __) => const Text('Loading'),
+        emptyWidgetBuilder: (message, __) => const Text('Empty'),
+        errorWidgetBuilder: (message, onRetry) => TextButton(
+              onPressed: onRetry,
+              child: const Text("Click to Retry"),
+            ),
+        onRetry: () {
+          //retry
+          setState(() {
+            stateType = StateType.loading;
+          });
+        },
+        message: "Prompt message");
 
 ```
 
