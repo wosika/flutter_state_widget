@@ -65,17 +65,17 @@ The global configuration of the `StateWidget` component can be set as follows:
 
 ```dart
 // Global initialization of state layout
-StateWidget.config(
-errorWidgetBuilder: (String? message, VoidCallback? onRetry) => Column(
-children: [
-Text(message ?? "Error"),
-TextButton(onPressed: onRetry, child: const Text("Click to Retry"))
-],
-),
-emptyWidgetBuilder: (String? message, VoidCallback? onRetry) =>
-Text(message ?? "Empty"),
-loadingWidgetBuilder: (String? message, VoidCallback? onRetry) =>
-Text(message ?? "Loading"));
+    StateWidget.config(
+        errorWidgetBuilder: (String? message, VoidCallback? onRetry) => Column(
+              children: [
+                Text(message ?? "Error"),
+                TextButton(onPressed: onRetry, child: const Text("Click to Retry"))
+              ],
+            ),
+        emptyWidgetBuilder: (String? message, VoidCallback? onRetry) =>
+            Text(message ?? "Empty"),
+        loadingWidgetBuilder: (String? message, VoidCallback? onRetry) =>
+            Text(message ?? "Loading"));
 
 ```
 
