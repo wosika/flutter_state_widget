@@ -1,6 +1,6 @@
 name: state_widget
 description: Loading, error, empty widget
-version: 1.0.0
+version: 1.0.1
 homepage: https://github.com/wosika/flutter_state_widget
 
 environment:
